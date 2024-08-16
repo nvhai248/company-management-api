@@ -1,0 +1,40 @@
+title = "Default Config"
+[[rules]]
+description = "Generic secret"
+regex = '''(?:[A-Za-z0-9._%+-]{30,}|(?:[A-Za-z0-9+/=]{32,}|[A-Za-z0-9]{64,}))(?:[^A-Za-z0-9+/=]{4,}|(?:[A-Za-z0-9+/=]{32,}|[A-Za-z0-9]{64,})).*'''
+tags = ["generic"]
+
+[[rules]]
+description = "AWS Secret Key"
+regex = "AKIA[0-9A-Z]{16}"
+tags = ["aws", "key"]
+
+[[rules]]
+description = "AWS Access Key"
+regex = "ASIA[0-9A-Z]{16}"
+tags = ["aws", "key"]
+
+[[rules]]
+description = "AWS Session Token"
+regex = "FwoGZXIv[0-9A-Za-z+/]{128}"
+tags = ["aws", "token"]
+
+[[rules]]
+description = "Google API Key"
+regex = "AIza[0-9A-Za-z-_]{35}"
+tags = ["google", "api_key"]
+
+[[rules]]
+description = "Stripe Secret Key"
+regex = "sk_(test|live)_[0-9a-zA-Z]{24}"
+tags = ["stripe", "key"]
+
+[[rules]]
+description = "OAuth2 Token"
+regex = "ya29\\.[0-9A-Za-z\\-_\\.]+"  # Example for Google OAuth2 token
+tags = ["oauth2", "token"]
+
+[[rules]]
+description = "GitHub Token"
+regex = "ghp_[0-9a-zA-Z]{36}"
+tags = ["github", "token"]
