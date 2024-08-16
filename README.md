@@ -14,7 +14,7 @@ Welcome to the Company Management APIs Service documentation. This service is de
 
 ## Author
 
-- **Mid9 Tech**
+- **Nguyen Van Hai**
   - **Contact:** nvhai248@gmail.com
   - **GitHub:** [nvhai248](https://github.com/nvhai248)
 
