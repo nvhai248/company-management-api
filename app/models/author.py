@@ -1,13 +1,8 @@
 from pydantic import BaseModel, Field
 from datetime import datetime
 from uuid import UUID
-import enum
 
-
-class Gender(enum.Enum):
-    NONE = "NONE"
-    FEMALE = "FEMALE"
-    MALE = "MALE"
+from shared.enums.index import Gender
 
 
 class AuthorModel(BaseModel):

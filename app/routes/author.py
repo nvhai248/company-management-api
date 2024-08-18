@@ -1,3 +1,5 @@
+from datetime import datetime
+from uuid import UUID
 from fastapi import Depends, HTTPException, APIRouter
 from starlette import status
 from schemas.author import Author
@@ -27,15 +29,8 @@ async def get_authors(
     authors = db.query(Author).all()
     if not authors:
         raise HTTPException(status_code=404, detail="No authors found")
-    return [
-        AuthorViewModel(
-            id=author.id,
-            full_name=author.full_name,
-            gender=author.gender.value,
-            created_at=author.created_at,
-        )
-        for author in authors
-    ]
+
+    return authors
 
 
 @router.post("/", status_code=status.HTTP_201_CREATED)
@@ -45,3 +40,21 @@ async def create_author(
     author = Author(**request.dict())
     db.add(author)
     db.commit()
+
+
+@router.put("/{author_id}", status_code=status.HTTP_200_OK)
+async def create_author(
+    request: AuthorModel, author_id: UUID, db: Session = Depends(get_db_context)
+) -> AuthorViewModel:
+    author = db.query(Author).filter(Author.id == author_id).first()
+    if author is None:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND, detail="Author Not Found"
+        )
+
+    author.full_name = request.full_name
+    author.gender = request.gender
+    author.updated_at = datetime.utcnow()
+    db.add(author)
+    db.commit()
+    return author
