@@ -2,10 +2,21 @@ from datetime import timedelta
 from fastapi import APIRouter, Depends, HTTPException
 from fastapi.security import OAuth2PasswordRequestForm
 from sqlalchemy.orm import Session
+from models.user import UserViewModel
+from schemas.user import User
 from services import auth
 from shared.database import get_db_context
 
 router = APIRouter(prefix="/auth", tags=["Auth"])
+
+
+@router.get("/")
+async def get_profile(
+    db: Session = Depends(get_db_context),
+    current_user: auth.User = Depends(auth.token_interceptor),
+) -> UserViewModel:
+    user = db.query(User).filter(User.id == current_user.id).first()
+    return user
 
 
 @router.post("/token")
