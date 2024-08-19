@@ -13,6 +13,7 @@ distlib==0.3.8
 distro==1.7.0
 distro-info==1.1+ubuntu0.1
 dnspython==2.6.1
+ecdsa==0.19.0
 email_validator==2.2.0
 exceptiongroup==1.2.2
 fastapi==0.112.1
@@ -41,8 +42,10 @@ mdurl==0.1.2
 more-itertools==8.10.0
 netifaces==0.11.0
 oauthlib==3.2.0
+passlib==1.7.4
 platformdirs==4.2.2
 psycopg2-binary==2.9.9
+pyasn1==0.6.0
 pycodestyle==2.12.1
 pydantic==2.8.2
 pydantic_core==2.20.1
@@ -54,9 +57,11 @@ pylint==3.2.6
 pyparsing==2.4.7
 python-apt==2.4.0+ubuntu2
 python-dotenv==1.0.1
+python-jose==3.3.0
 python-multipart==0.0.9
 PyYAML==5.4.1
 rich==13.7.1
+rsa==4.9
 SecretStorage==3.3.1
 shellingham==1.5.4
 six==1.16.0

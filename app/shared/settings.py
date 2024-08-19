@@ -1,8 +1,5 @@
 import os
 from dotenv import load_dotenv
-from sqlalchemy import MetaData, create_engine
-from sqlalchemy.orm import sessionmaker
-from sqlalchemy.ext.declarative import declarative_base
 
 load_dotenv()
 
@@ -17,9 +14,8 @@ def get_connection_string():
 
 
 SQLALCHEMY_DB_URL = get_connection_string()
+ADMIN_DEFAULT_PASSWORD = os.environ.get("DEFAULT_PASSWORD")
 
-engine = create_engine(SQLALCHEMY_DB_URL)
-metadata = MetaData()
-
-LocalSession = sessionmaker(autoflush=False, autocommit=False, bind=engine)
-Base = declarative_base()
+# JWT Setting
+JWT_SECRET = os.environ.get("JWT_SECRET")
+JWT_ALGORITHM = os.environ.get("JWT_ALGORITHM")

@@ -2,20 +2,12 @@ from datetime import datetime
 from uuid import UUID
 from fastapi import Depends, HTTPException, APIRouter
 from starlette import status
+from shared.database import get_db_context
 from schemas.author import Author
-from database import LocalSession
 from models.author import AuthorModel, AuthorViewModel
 from sqlalchemy.orm import Session
 
 router = APIRouter(prefix="/authors", tags=["Author"])
-
-
-def get_db_context():
-    try:
-        db = LocalSession()
-        yield db
-    finally:
-        db.close()
 
 
 def http_exception():
