@@ -22,10 +22,13 @@ jobs:
 
       - name: Install dependencies
         run: |
+          python -m venv venv
+          source venv/bin/activate
           pip install -r requirements.txt
 
       - name: Run lint
         run: |
+          source venv/bin/activate
           pylint app/
 
   gitleaks:
@@ -34,7 +37,7 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
         with:
-          fetch-depth: 0 
+          fetch-depth: 0
 
       - name: List tags
         run: git tag
