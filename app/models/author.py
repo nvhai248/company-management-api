@@ -1,18 +1,16 @@
-from datetime import datetime
-import enum
 from pydantic import BaseModel, Field
-from uuid import UUID  # Import UUID from standard library
+from datetime import datetime
+from uuid import UUID
 
-
-class Gender(enum.Enum):
-    NONE = "NONE"
-    FEMALE = "FEMALE"
-    MALE = "MALE"
+from shared.enums.index import Gender
 
 
 class AuthorModel(BaseModel):
     full_name: str = Field(min_length=3)
-    gender: Gender = Field(default=Gender.NONE)  # Use Pydantic's enum
+    gender: Gender = Field(default=Gender.NONE)
+
+    class Config:
+        use_enum_values = True
 
 
 class AuthorViewModel(BaseModel):
@@ -20,6 +18,8 @@ class AuthorViewModel(BaseModel):
     full_name: str
     gender: Gender = Gender.NONE
     created_at: datetime | None = None
+    updated_at: datetime | None = None
 
-    class Config:  # Correct the config class name to 'Config'
-        orm_mode = True  # Fix 'orm_map' to 'orm_mode' which is the correct attribute
+    class Config:
+        orm_mode = True
+        use_enum_values = True

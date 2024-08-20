@@ -1,12 +1,12 @@
-import os
-from dotenv import load_dotenv
-
 from logging.config import fileConfig
 
 from sqlalchemy import engine_from_config
 from sqlalchemy import pool
 
 from alembic import context
+
+from shared.settings import SQLALCHEMY_DB_URL
+from shared.database import metadata
 
 # this is the Alembic Config object, which provides
 # access to the values within the .ini file in use.
@@ -21,17 +21,10 @@ if config.config_file_name is not None:
 # for 'autogenerate' support
 # from myapp import mymodel
 # target_metadata = mymodel.Base.metadata
-target_metadata = None
+target_metadata = metadata
 
 # DB Connection string configuration
-load_dotenv()
-db_engine = os.environ.get("DB_ENGINE")
-db_host = os.environ.get("DB_HOST")
-db_username = os.environ.get("DB_USERNAME")
-db_password = os.environ.get("DB_PASSWORD")
-db_name = os.environ.get("DB_NAME")
-connection_string = f"{db_engine}://{db_username}:{db_password}@{db_host}/{db_name}"
-config.set_main_option("sqlalchemy.url", connection_string)
+config.set_main_option("sqlalchemy.url", SQLALCHEMY_DB_URL)
 
 # other values from the config, defined by the needs of env.py,
 # can be acquired:
