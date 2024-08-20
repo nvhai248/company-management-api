@@ -10,7 +10,6 @@ dbus-python==1.2.18
 dill==0.3.8
 distlib==0.3.8
 distro==1.7.0
-distro-info==1.1+ubuntu0.1
 dnspython==2.6.1
 ecdsa==0.19.0
 email_validator==2.2.0
