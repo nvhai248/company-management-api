@@ -3,8 +3,8 @@ from uuid import UUID
 from fastapi import Depends, HTTPException, APIRouter
 from starlette import status
 from shared.database import get_db_context
-from schemas.author import Author
-from models.author import AuthorModel, AuthorViewModel
+from app.schemas.task import Author
+from app.models.company import AuthorModel, AuthorViewModel
 from sqlalchemy.orm import Session
 
 router = APIRouter(prefix="/authors", tags=["Author"])
