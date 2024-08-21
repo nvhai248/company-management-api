@@ -5,6 +5,7 @@ from uuid import UUID
 from fastapi import Depends, HTTPException
 from fastapi.security import OAuth2PasswordBearer
 import jwt
+from shared.exceptions import forbidden_exception
 from shared.settings import JWT_ALGORITHM, JWT_SECRET
 from schemas.user import User, verify_password
 from sqlalchemy.orm import Session
@@ -67,6 +68,13 @@ def token_interceptor(token: str = Depends(oa2_bearer)) -> User:
         raise token_exception("Expired token")
     except jwt.InvalidTokenError:
         raise token_exception("Invalid token")
+
+
+def is_admin(current_user: User = Depends(token_interceptor)) -> User:
+    if not current_user.is_admin:
+        raise forbidden_exception()
+
+    return current_user
 
 
 def token_exception(message: str):

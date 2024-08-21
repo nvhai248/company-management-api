@@ -9,8 +9,8 @@ import uuid
 Base = declarative_base()
 
 
-class Book(Base, BaseEntity):
-    __tablename__ = "books"
+class Company(Base, BaseEntity):
+    __tablename__ = "companies"
 
     name = Column(String, nullable=False)
     description = Column(String, nullable=True)

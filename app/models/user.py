@@ -1,25 +1,25 @@
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, EmailStr
 from datetime import datetime
 from uuid import UUID
+from typing import Optional
 
 
-class UserModel(BaseModel):
+class UserBaseModel(BaseModel):
     username: str = Field(min_length=5)
-    email: str = Field()
+    email: EmailStr
     first_name: str = Field(min_length=3)
+    company_id: UUID
     last_name: str = Field(min_length=3)
-    hashed_password: str = Field(min_length=3)
 
 
-class UserViewModel(BaseModel):
+class UserModel(UserBaseModel):
+    pass
+
+
+class UserViewModel(UserBaseModel):
     id: UUID
-    email: str
-    username: str
-    first_name: str
-    last_name: str
-    hashed_password: str
-    created_at: datetime | None = None
-    updated_at: datetime | None = None
+    created_at: Optional[datetime] = None
+    updated_at: Optional[datetime] = None
 
     class Config:
         orm_mode = True

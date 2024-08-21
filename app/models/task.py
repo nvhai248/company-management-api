@@ -10,7 +10,6 @@ class TaskModel(BaseModel):
     description: str = Field()
     status: TaskStatus = Field()
     priority: TaskPriority = Field()
-    user_id: UUID = Field(default_factory=UUID)
 
     class Config:
         use_enum_values = True

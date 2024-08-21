@@ -10,8 +10,8 @@ from .base_entity import BaseEntity
 Base = declarative_base()
 
 
-class Author(Base, BaseEntity):
-    __tablename__ = "authors"
+class Task(Base, BaseEntity):
+    __tablename__ = "tasks"
 
     summary = Column(String, nullable=False)
     description = Column(String, nullable=False)
