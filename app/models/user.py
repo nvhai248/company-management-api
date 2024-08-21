@@ -8,7 +8,7 @@ class UserBaseModel(BaseModel):
     username: str = Field(min_length=5)
     email: EmailStr
     first_name: str = Field(min_length=3)
-    company_id: UUID
+    company_id: Optional[UUID]
     last_name: str = Field(min_length=3)
 
 
@@ -23,3 +23,4 @@ class UserViewModel(UserBaseModel):
 
     class Config:
         orm_mode = True
+        from_attributes = True

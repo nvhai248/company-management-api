@@ -1,4 +1,3 @@
-from typing import Any, Dict
 from fastapi import APIRouter, Depends, Query, status
 from sqlalchemy.orm import Session
 from shared.type import PaginationResponse
@@ -38,7 +37,7 @@ async def create_user(
     )
 
     if not existing_company:
-        raise notfound_exception("Company")
+        raise notfound_exception("Company not found")
 
     # Hash the password
     hashed_password = get_password_hash(USER_DEFAULT_PASSWORD)
@@ -57,7 +56,7 @@ async def get_users(
     db: Session = Depends(get_db_context),
     pageNumber: int = Query(1, description="Page number"),
     pageSize: int = Query(10, description="Number of users to return per page"),
-    response_model=PaginationResponse[UserViewModel],
+    current_user: User = Depends(auth.is_admin),
     status_code=status.HTTP_200_OK,
 ) -> PaginationResponse[UserViewModel]:
     total_users = db.query(User).count()

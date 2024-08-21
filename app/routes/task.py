@@ -43,20 +43,21 @@ async def get_owner_task(
     pageNumber: int = Query(1, description="Page number"),
     current_user: User = Depends(auth.token_interceptor),
     pageSize: int = Query(10, description="Number of tasks to return per page"),
-    response_model=PaginationResponse[TaskViewModel],
 ) -> PaginationResponse[TaskViewModel]:
-    query = db.query(Task).filter(Task.owner_id == current_user.id)
+    query = db.query(Task).filter(Task.user_id == current_user.id)
 
     total_items = query.count()
     total_pages = math.ceil(total_items / pageSize)
 
     tasks = query.offset((pageNumber - 1) * pageSize).limit(pageSize).all()
 
+    tasks_result = [TaskViewModel.from_orm(task) for task in tasks]
+
     return {
         "pageNumber": pageNumber,
         "totalPages": total_pages,
         "pageSize": pageSize,
-        "data": tasks,  # Convert tasks to TaskViewModel if needed
+        "data": tasks_result,  # Convert tasks to TaskViewModel if needed
     }
 
 
@@ -67,21 +68,23 @@ async def get_user_task(
     pageNumber: int = Query(1, description="Page number"),
     current_user: User = Depends(auth.is_admin),
     pageSize: int = Query(10, description="Number of tasks to return per page"),
-    response_model=PaginationResponse[Any],
 ) -> PaginationResponse[Any]:
 
-    query = db.query(Task).join(User).filter(Task.owner_id == User.id)
+    query = db.query(Task).join(User, Task.user_id == User.id)
 
     total_items = query.count()
     total_pages = math.ceil(total_items / pageSize)
 
     tasks = query.offset((pageNumber - 1) * pageSize).limit(pageSize).all()
 
+    tasks_result = [TaskViewModel.from_orm(task) for task in tasks]
+    print(tasks_result)
+
     return {
         "pageNumber": pageNumber,
         "totalPages": total_pages,
         "pageSize": pageSize,
-        "data": tasks,  # Convert tasks to TaskViewModel if needed
+        "data": tasks_result,  # Convert tasks to TaskViewModel if needed
     }
 
 
@@ -98,7 +101,7 @@ async def update_task_information(
         raise notfound_exception("Task")
 
     # Ensure the user can update this task (optional)
-    if task.owner_id != current_user.id and not current_user.is_admin:
+    if task.user_id != current_user.id and not current_user.is_admin:
         raise forbidden_exception("You do not have permission to update this task")
 
     # Update the task fields
@@ -120,7 +123,7 @@ async def get_task_information(
         raise notfound_exception("Task")
 
     # Ensure the user can view this task (optional)
-    if task.owner_id != current_user.id and not current_user.is_admin:
+    if task.user_id != current_user.id and not current_user.is_admin:
         raise forbidden_exception("You do not have permission to view this task")
 
     return task
@@ -137,7 +140,7 @@ async def delete_task(
     if not task:
         raise notfound_exception("Task")
 
-    if task.owner_id != current_user.id and not current_user.is_admin:
+    if task.user_id != current_user.id and not current_user.is_admin:
         raise forbidden_exception("You do not have permission to delete this task")
 
     db.delete(task)

@@ -1,5 +1,5 @@
 import uuid
-from sqlalchemy import Boolean, Column, String
+from sqlalchemy import Boolean, Column, ForeignKey, String
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.dialects.postgresql import UUID as SQLAlchemyUUID
 from .base_entity import BaseEntity
@@ -20,7 +20,10 @@ class User(Base, BaseEntity):
     last_name = Column(String, nullable=False)
     hashed_password = Column(String, nullable=False)
     company_id = Column(
-        SQLAlchemyUUID(as_uuid=True), default=uuid.uuid4, nullable=False
+        SQLAlchemyUUID(as_uuid=True),
+        ForeignKey("companies.id"),
+        default=uuid.uuid4,
+        nullable=False,
     )
     is_active = Column(Boolean, default=True)
     is_admin = Column(Boolean, default=False)
