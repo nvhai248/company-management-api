@@ -1,8 +1,8 @@
 """generate user table
 
-Revision ID: 2c677a3c35db
-Revises: 601a1fbfd574
-Create Date: 2024-08-19 10:07:02.357346
+Revision ID: 85ab6c2d969e
+Revises: 8d5920d0bd1d
+Create Date: 2024-08-20 12:54:29.571079
 
 """
 
@@ -13,13 +13,13 @@ from uuid import uuid4
 from alembic import op
 import sqlalchemy as sa
 
-from shared.settings import ADMIN_DEFAULT_PASSWORD
 from schemas.user import get_password_hash
+from shared.settings import ADMIN_DEFAULT_PASSWORD
 
 
 # revision identifiers, used by Alembic.
-revision: str = "2c677a3c35db"
-down_revision: Union[str, None] = "601a1fbfd574"
+revision: str = "85ab6c2d969e"
+down_revision: Union[str, None] = "8d5920d0bd1d"
 branch_labels: Union[str, Sequence[str], None] = None
 depends_on: Union[str, Sequence[str], None] = None
 
@@ -32,9 +32,11 @@ def upgrade() -> None:
         sa.Column("email", sa.String(), nullable=True, unique=True),
         sa.Column("first_name", sa.String(), nullable=False),
         sa.Column("last_name", sa.String(), nullable=False),
-        sa.Column("password", sa.String(), nullable=False),
+        sa.Column("hashed_password", sa.String(), nullable=False),
         sa.Column("is_active", sa.Boolean, default=True),
         sa.Column("is_admin", sa.Boolean, default=False),
+        sa.Column("company_id", sa.UUID(), nullable=True),
+        sa.ForeignKeyConstraint(["company_id"], ["companies.id"], ondelete="CASCADE"),
         sa.Column("created_at", sa.TIMESTAMP(), server_default=sa.func.now()),
         sa.Column("updated_at", sa.TIMESTAMP(), server_default=sa.func.now()),
         sa.PrimaryKeyConstraint("id"),
@@ -52,7 +54,7 @@ def upgrade() -> None:
                 "username": "admin",
                 "first_name": "Admin",
                 "last_name": "FastAPI",
-                "password": get_password_hash(ADMIN_DEFAULT_PASSWORD),
+                "hashed_password": get_password_hash(ADMIN_DEFAULT_PASSWORD),
                 "is_active": True,
                 "is_admin": True,
                 "created_at": datetime.now(),

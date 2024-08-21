@@ -1,0 +1,45 @@
+version: "3.8"
+
+services:
+  db:
+    image: postgres
+    container_name: fastapi_db
+    ports:
+      - "5432:5432"
+    environment:
+      - POSTGRES_USER=${DB_USERNAME}
+      - POSTGRES_PASSWORD=${DB_PASSWORD}
+      - POSTGRES_DB=${DB_NAME}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - todoapp
+
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: fastapi_web
+    ports:
+      - "8000:8000"
+    environment:
+      - DB_ENGINE=postgresql
+      - DB_HOST=db
+      - DB_USERNAME=${DB_USERNAME}
+      - DB_PASSWORD=${DB_PASSWORD}
+      - POSTGRES_HOST_AUTH_METHOD=trust
+      - DB_NAME=${DB_NAME}
+      - JWT_SECRET=${JWT_SECRET}
+      - JWT_ALGORITHM=${JWT_ALGORITHM}
+      - DEFAULT_PASSWORD=${DEFAULT_PASSWORD}
+    depends_on:
+      - db
+    networks:
+      - todoapp
+
+volumes:
+  postgres_data:
+
+networks:
+  todoapp:
+    driver: bridge
