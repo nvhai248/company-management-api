@@ -2,7 +2,7 @@ from pydantic import BaseModel, Field
 from datetime import datetime
 from uuid import UUID
 
-from shared.enums.index import CompanyMode
+from shared.enums import CompanyMode
 
 
 class CompanyModel(BaseModel):
@@ -18,6 +18,7 @@ class CompanyModel(BaseModel):
 class CompanyViewModel(BaseModel):
     id: UUID
     name: str
+    description: str
     mode: CompanyMode = CompanyMode.ACTIVE
     created_at: datetime | None = None
     updated_at: datetime | None = None
@@ -25,3 +26,4 @@ class CompanyViewModel(BaseModel):
     class Config:
         orm_mode = True
         use_enum_values = True
+        from_attributes = True

@@ -11,7 +11,7 @@ from typing import Sequence, Union
 from alembic import op
 import sqlalchemy as sa
 
-from shared.enums.index import CompanyMode
+from app.shared.enums import CompanyMode
 
 
 # revision identifiers, used by Alembic.

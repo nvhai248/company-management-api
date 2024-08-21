@@ -4,6 +4,7 @@ from typing import Any, Dict
 from uuid import UUID
 from fastapi import Depends, APIRouter, Query
 from starlette import status
+from shared.type import PaginationResponse
 from shared.exceptions import notfound_exception
 from shared.database import get_db_context
 from schemas.company import Company
@@ -19,7 +20,7 @@ async def get_companies(
     pageNumber: int = Query(1, description="Page number"),
     pageSize: int = Query(10, description="Number of companies to return per page"),
     status_code=status.HTTP_200_OK,
-) -> Dict[str, Any]:
+) -> PaginationResponse[CompanyViewModel]:
     total_companies = db.query(Company).count()
 
     totalPages = math.ceil(total_companies / pageSize)
@@ -31,11 +32,13 @@ async def get_companies(
     if not companies:
         raise notfound_exception("Company")
 
+    company_view_models = [CompanyViewModel.from_orm(company) for company in companies]
+
     return {
         "pageNumber": pageNumber,
         "totalPages": totalPages,
         "pageSize": pageSize,
-        "data": companies,
+        "data": company_view_models,
     }
 
 
@@ -56,8 +59,10 @@ async def update_Company(
     if Company is None:
         raise notfound_exception("Company")
 
-    company.full_name = request.full_name
-    company.gender = request.gender
+    company.name = request.name
+    company.description = request.description
+    company.mode = request.mode
+    company.rating = request.rating
     company.updated_at = datetime.utcnow()
     db.add(company)
     db.commit()

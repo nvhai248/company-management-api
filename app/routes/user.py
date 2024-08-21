@@ -1,8 +1,9 @@
 from typing import Any, Dict
 from fastapi import APIRouter, Depends, Query, status
 from sqlalchemy.orm import Session
-from app.schemas.company import Company
-from app.shared.settings import USER_DEFAULT_PASSWORD
+from shared.type import PaginationResponse
+from schemas.company import Company
+from shared.settings import USER_DEFAULT_PASSWORD
 from shared.exceptions import (
     badrequest_exception,
     forbidden_exception,
@@ -56,8 +57,9 @@ async def get_users(
     db: Session = Depends(get_db_context),
     pageNumber: int = Query(1, description="Page number"),
     pageSize: int = Query(10, description="Number of users to return per page"),
+    response_model=PaginationResponse[UserViewModel],
     status_code=status.HTTP_200_OK,
-) -> Dict[str, Any]:
+) -> PaginationResponse[UserViewModel]:
     total_users = db.query(User).count()
 
     totalPages = math.ceil(total_users / pageSize)
@@ -92,6 +94,7 @@ async def get_user(
 
     # Convert to view model and return
     return UserViewModel.from_orm(user)
+
 
 @router.delete("/{user_id}", status_code=status.HTTP_204_NO_CONTENT)
 async def delete_user(

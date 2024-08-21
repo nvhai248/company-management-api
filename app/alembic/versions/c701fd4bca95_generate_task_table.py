@@ -13,7 +13,7 @@ import sqlalchemy as sa
 
 from sqlalchemy.dialects.postgresql import ENUM
 
-from shared.enums.index import TaskPriority, TaskStatus
+from app.shared.enums import TaskPriority, TaskStatus
 
 
 # revision identifiers, used by Alembic.

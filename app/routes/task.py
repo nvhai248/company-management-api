@@ -1,6 +1,7 @@
 from typing import Any, Dict
 from uuid import UUID
 from fastapi import APIRouter, Depends, Query, status
+from shared.type import PaginationResponse
 from schemas.user import User
 from shared.exceptions import (
     badrequest_exception,
@@ -42,7 +43,8 @@ async def get_owner_task(
     pageNumber: int = Query(1, description="Page number"),
     current_user: User = Depends(auth.token_interceptor),
     pageSize: int = Query(10, description="Number of tasks to return per page"),
-) -> Dict[str, Any]:
+    response_model=PaginationResponse[TaskViewModel],
+) -> PaginationResponse[TaskViewModel]:
     query = db.query(Task).filter(Task.owner_id == current_user.id)
 
     total_items = query.count()
@@ -65,7 +67,8 @@ async def get_user_task(
     pageNumber: int = Query(1, description="Page number"),
     current_user: User = Depends(auth.is_admin),
     pageSize: int = Query(10, description="Number of tasks to return per page"),
-) -> Dict[str, Any]:
+    response_model=PaginationResponse[Any],
+) -> PaginationResponse[Any]:
 
     query = db.query(Task).join(User).filter(Task.owner_id == User.id)
 
